@@ -50,7 +50,7 @@ object JdtAstViewToolWindowFactory {
     cr.setLeafIcon(null)
     astView.tree.getSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION)
     astView.tree.setModel(astView.treeModel)
-    val content = contentFactory.createContent(astView.panel, "JDT AST", false)
+    val content = contentFactory.createContent(astView.panel, "", false)
     toolWindow.getContentManager.addContent(content)
     windows.put(project, Forms(toolWindow, astView))
   }
