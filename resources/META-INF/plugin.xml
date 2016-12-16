@@ -1,0 +1,60 @@
+<!--
+  Copyright (c) 2016, Robby, Kansas State University
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this
+     list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  -->
+
+<idea-plugin version="2">
+    <id>org.santoslab.compilers</id>
+    <name>JDT AstView</name>
+    <version>0.0.1-SNAPSHOT</version>
+    <vendor email="robby@santoslab.org" url="http://robby.santoslab.org">Robby, SAnToS Lab, Kansas State University
+    </vendor>
+
+    <description><![CDATA[
+    This plugin provides Eclipse JDT AST Viewer for Java source code.
+    To enable, right-click on a Java source editor and select "Enable JDT AST View".
+    ]]></description>
+
+    <change-notes><![CDATA[
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="143.1184"/>
+
+    <depends>com.intellij.modules.lang</depends>
+
+    <actions>
+        <action id="ViewJdtAst" class="org.santoslab.intellij.jdt.astview.SwitchViewAction"
+                text="Enable JDT AST View"
+                description="Enable JDT AST view tracking of Java source code">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+
+    <project-components>
+        <component>
+            <implementation-class>org.santoslab.intellij.jdt.astview.JdtAstViewProjectComponent</implementation-class>
+        </component>
+    </project-components>
+
+</idea-plugin>

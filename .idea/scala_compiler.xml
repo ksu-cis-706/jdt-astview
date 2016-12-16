@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <parameters>
+      <parameter value="–target:jvm-1.8" />
+      <parameter value="-opt:l:classpath" />
+      <parameter value="-deprecation" />
+      <parameter value="-Ydelambdafy:method" />
+      <parameter value="-feature" />
+      <parameter value="-unchecked" />
+    </parameters>
+  </component>
+</project>
