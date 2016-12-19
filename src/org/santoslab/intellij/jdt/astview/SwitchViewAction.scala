@@ -25,44 +25,33 @@
 
 package org.santoslab.intellij.jdt.astview
 
-import com.intellij.ide.util.PropertiesComponent
-import com.intellij.openapi.actionSystem.{AnAction, AnActionEvent, CommonDataKeys}
+import com.intellij.openapi.actionSystem._
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.wm.impl.ToolWindowImpl
 
 class SwitchViewAction extends AnAction {
-  final val key: String = "org.santoslab.jdt.astview.enabled"
-  final val enabledText: String = "Disable JDT AST View"
-  final val enabledDescription: String = "Disable JDT AST view tracking of Java source code"
-  final val disabledText: String = "Enable JDT AST View"
-  final val disabledDescription: String = "Enable JDT AST view tracking of Java source code"
+  // init
+  {
+    val am = ActionManager.getInstance
+
+    val runGroup = am.getAction("ToolsMenu").
+      asInstanceOf[DefaultActionGroup]
+    runGroup.addAction(this, Constraints.LAST)
+  }
 
   override def actionPerformed(e: AnActionEvent): Unit = {
-    val pc = PropertiesComponent.getInstance
-    val isEnabled = pc.getBoolean(key, false)
-    pc.setValue(key, !isEnabled)
-    if (isEnabled) JdtAstViewProjectComponent.resetView(e.getProject)
-    else {
-      val file = e.getData[VirtualFile](CommonDataKeys.VIRTUAL_FILE)
-      JdtAstViewProjectComponent.toolWindowFactory(e.getProject, { f =>
-        val tw = f.toolWindow.asInstanceOf[ToolWindowImpl]
-        tw.activate(() => {
-          JdtAstViewProjectComponent.updateAstView(e.getProject, file)
-        })
-      })
-    }
+    val project = e.getProject
+    val file = e.getData[VirtualFile](CommonDataKeys.VIRTUAL_FILE)
+    JdtAstViewProjectComponent.performSwitchAction(project, file)
   }
 
   override def update(e: AnActionEvent): Unit = {
-    val pc = PropertiesComponent.getInstance
-    val isEnabled = pc.getBoolean(key, false)
     val p = e.getPresentation
-    if (isEnabled) {
-      p.setText(enabledText)
-      p.setDescription(enabledDescription)
+    if (JdtAstViewProjectComponent.isSwitchActionEnabled) {
+      p.setText(JdtAstViewProjectComponent.disabledText)
+      p.setDescription(JdtAstViewProjectComponent.disabledDescription)
     } else {
-      p.setText(disabledText)
-      p.setDescription(disabledDescription)
+      p.setText(JdtAstViewProjectComponent.enabledText)
+      p.setDescription(JdtAstViewProjectComponent.enabledDescription)
     }
   }
 }

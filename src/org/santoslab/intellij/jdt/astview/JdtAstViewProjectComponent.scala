@@ -25,50 +25,79 @@
 
 package org.santoslab.intellij.jdt.astview
 
+import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.components.ProjectComponent
 import com.intellij.openapi.editor.event.{DocumentEvent, DocumentListener}
 import com.intellij.openapi.fileEditor._
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.impl.ToolWindowImpl
 import com.intellij.openapi.wm.{ToolWindowAnchor, ToolWindowManager}
 import org.eclipse.jdt.core.JavaCore
 import org.eclipse.jdt.core.dom.{AST, ASTParser}
 
 object JdtAstViewProjectComponent {
+  final val key: String = "org.santoslab.jdt.astview.enabled"
+  final val enabledText: String = "Disable JDT AST View"
+  final val enabledDescription: String = "Disable JDT AST view tracking of Java source code"
+  final val disabledText: String = "Enable JDT AST View"
+  final val disabledDescription: String = "Enable JDT AST view tracking of Java source code"
+  var isSwitchActionEnabled: Boolean = {
+    val pc = PropertiesComponent.getInstance
+    pc.getBoolean(key, false)
+  }
+
+  def performSwitchAction(project: Project, file: VirtualFile): Unit = {
+    isSwitchActionEnabled = !isSwitchActionEnabled
+    val pc = PropertiesComponent.getInstance
+    pc.setValue(key, isSwitchActionEnabled)
+    if (isSwitchActionEnabled) JdtAstViewProjectComponent.resetView(project)
+    else {
+      JdtAstViewProjectComponent.toolWindowFactory(project, { f =>
+        val tw = f.toolWindow.asInstanceOf[ToolWindowImpl]
+        tw.activate(() => {
+          JdtAstViewProjectComponent.updateAstView(project, file)
+        })
+      })
+    }
+  }
+
   def resetView(project: Project): Unit = {
     toolWindowFactory(project, { f =>
       f.astView.treeModel.setRoot(JdtAstViewToolWindowFactory.emptyRoot)
     })
   }
 
-  def updateAstView(project: Project, file: VirtualFile): Unit = {
-    val editor = FileEditorManager.
-      getInstance(project).getSelectedTextEditor
-    if (editor == null) return
-    val document = editor.getDocument
-    val source = document.getText.toCharArray
-    val parser = ASTParser.newParser(AST.JLS8)
-    parser.setSource(source)
-    val options = JavaCore.getOptions
-    JavaCore.setComplianceOptions(JavaCore.VERSION_1_8, options)
-    parser.setCompilerOptions(options)
-    val cu = parser.createAST(null)
-    toolWindowFactory(project, { f =>
-      val tree = f.astView.tree
-      for (sl <- tree.getTreeSelectionListeners) {
-        tree.removeTreeSelectionListener(sl)
-      }
-      f.astView.treeModel.setRoot(TreeNodeAdapter("root", 0, Some(Left(cu))))
-      tree.addTreeSelectionListener({ e =>
-        if (!editor.isDisposed) {
-          Option(tree.getLastSelectedPathComponent.asInstanceOf[TreeNodeAdapter]).foreach { tna =>
-            FileEditorManager.getInstance(project).openTextEditor(
-              new OpenFileDescriptor(project, file, tna.offset), true)
-          }
+  def updateAstView(project: Project, file: VirtualFile): Unit =
+    if (isSwitchActionEnabled) resetView(project)
+    else {
+      val editor = FileEditorManager.
+        getInstance(project).getSelectedTextEditor
+      if (editor == null) return
+      val document = editor.getDocument
+      val source = document.getText.toCharArray
+      val parser = ASTParser.newParser(AST.JLS8)
+      parser.setSource(source)
+      val options = JavaCore.getOptions
+      JavaCore.setComplianceOptions(JavaCore.VERSION_1_8, options)
+      parser.setCompilerOptions(options)
+      val cu = parser.createAST(null)
+      toolWindowFactory(project, { f =>
+        val tree = f.astView.tree
+        for (sl <- tree.getTreeSelectionListeners) {
+          tree.removeTreeSelectionListener(sl)
         }
+        f.astView.treeModel.setRoot(TreeNodeAdapter("root", 0, Some(Left(cu))))
+        tree.addTreeSelectionListener({ e =>
+          if (!editor.isDisposed) {
+            Option(tree.getLastSelectedPathComponent.asInstanceOf[TreeNodeAdapter]).foreach { tna =>
+              FileEditorManager.getInstance(project).openTextEditor(
+                new OpenFileDescriptor(project, file, tna.offset), true)
+            }
+          }
+        })
       })
-    })
-  }
+    }
 
   def toolWindowFactory(project: Project,
                         g: JdtAstViewToolWindowFactory.Forms => Unit): Unit =

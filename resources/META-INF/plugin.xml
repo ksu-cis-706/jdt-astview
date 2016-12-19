@@ -32,7 +32,6 @@
 
     <description><![CDATA[
     This plugin provides Eclipse JDT AST Viewer for Java source code.
-    To enable, right-click on a Java source editor and select "Enable JDT AST View".
     ]]></description>
 
     <change-notes><![CDATA[
