@@ -46,7 +46,7 @@ class SwitchViewAction extends AnAction {
 
   override def update(e: AnActionEvent): Unit = {
     val p = e.getPresentation
-    if (JdtAstViewProjectComponent.isSwitchActionEnabled) {
+    if (JdtAstViewProjectComponent.isSwitchActionDisabled) {
       p.setText(JdtAstViewProjectComponent.disabledText)
       p.setDescription(JdtAstViewProjectComponent.disabledDescription)
     } else {

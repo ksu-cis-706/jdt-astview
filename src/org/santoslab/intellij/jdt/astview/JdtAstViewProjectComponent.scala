@@ -42,16 +42,17 @@ object JdtAstViewProjectComponent {
   final val enabledDescription: String = "Disable JDT AST view tracking of Java source code"
   final val disabledText: String = "Enable JDT AST View"
   final val disabledDescription: String = "Enable JDT AST view tracking of Java source code"
-  var isSwitchActionEnabled: Boolean = {
+  var isSwitchActionDisabled: Boolean = {
     val pc = PropertiesComponent.getInstance
-    pc.getBoolean(key, false)
+    pc.getBoolean(key, true)
   }
 
   def performSwitchAction(project: Project, file: VirtualFile): Unit = {
-    isSwitchActionEnabled = !isSwitchActionEnabled
+    if (project.isDisposed) return
+    isSwitchActionDisabled = !isSwitchActionDisabled
     val pc = PropertiesComponent.getInstance
-    pc.setValue(key, isSwitchActionEnabled)
-    if (isSwitchActionEnabled) JdtAstViewProjectComponent.resetView(project)
+    pc.setValue(key, isSwitchActionDisabled)
+    if (isSwitchActionDisabled) JdtAstViewProjectComponent.resetView(project)
     else {
       JdtAstViewProjectComponent.toolWindowFactory(project, { f =>
         val tw = f.toolWindow.asInstanceOf[ToolWindowImpl]
@@ -63,13 +64,14 @@ object JdtAstViewProjectComponent {
   }
 
   def resetView(project: Project): Unit = {
+    if (project.isDisposed) return
     toolWindowFactory(project, { f =>
       f.astView.treeModel.setRoot(JdtAstViewToolWindowFactory.emptyRoot)
     })
   }
 
   def updateAstView(project: Project, file: VirtualFile): Unit =
-    if (isSwitchActionEnabled) resetView(project)
+    if (isSwitchActionDisabled || project.isDisposed) resetView(project)
     else {
       val editor = FileEditorManager.
         getInstance(project).getSelectedTextEditor
