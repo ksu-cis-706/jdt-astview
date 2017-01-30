@@ -26,7 +26,7 @@
 <idea-plugin version="2">
     <id>org.santoslab.compilers</id>
     <name>JDT AstView</name>
-    <version>0.0.1-3-SNAPSHOT</version>
+    <version>0.0.1-3</version>
     <vendor email="robby@santoslab.org" url="http://robby.santoslab.org">Robby, SAnToS Lab, Kansas State University
     </vendor>
 
