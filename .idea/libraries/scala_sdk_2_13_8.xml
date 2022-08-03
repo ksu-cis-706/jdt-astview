@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="scala-sdk-2.13.8" type="Scala">
+    <properties>
+      <language-level>Scala_2_13</language-level>
+      <compiler-classpath>
+        <root url="file://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.13.8.jar" />
+        <root url="file://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.13.8.jar" />
+        <root url="file://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.13.8.jar" />
+        <root url="file://$USER_HOME$/.ivy2/cache/org.jline/jline/jars/jline-3.21.0.jar" />
+        <root url="file://$USER_HOME$/.ivy2/cache/net.java.dev.jna/jna/jars/jna-5.9.0.jar" />
+      </compiler-classpath>
+    </properties>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.13.8.jar!/" />
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.13.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.13.8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

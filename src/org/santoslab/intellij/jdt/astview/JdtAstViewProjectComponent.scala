@@ -111,7 +111,7 @@ import org.santoslab.intellij.jdt.astview.JdtAstViewProjectComponent._
 class JdtAstViewProjectComponent(project: Project) extends ProjectComponent {
   override def projectClosed(): Unit = {}
 
-  override def projectOpened(): Unit = {
+  override def projectOpened(): Unit = ToolWindowManager.getInstance(project).invokeLater(() => {
     val tw = ToolWindowManager.getInstance(project).
       registerToolWindow("JDT AST", false, ToolWindowAnchor.RIGHT)
     JdtAstViewToolWindowFactory.createToolWindowContent(project, tw)
@@ -146,7 +146,7 @@ class JdtAstViewProjectComponent(project: Project) extends ProjectComponent {
               else
                 updateAstView(project, event.getNewFile)
         })
-  }
+  })
 
   override def initComponent(): Unit = {}
 

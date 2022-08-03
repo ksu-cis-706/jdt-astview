@@ -32,7 +32,7 @@ import org.eclipse.jdt.core.dom._
 final case class TreeNodeAdapter(id: String, offset: Int,
                                  nodeOrChildren: Option[Either[ASTNode, java.util.Vector[TreeNodeAdapter]]]) extends TreeNode {
   lazy val _children: java.util.Vector[TreeNodeAdapter] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     var result = new java.util.Vector[TreeNodeAdapter]
     nodeOrChildren match {
       case Some(Left(node)) =>
@@ -70,7 +70,7 @@ final case class TreeNodeAdapter(id: String, offset: Int,
     result
   }
 
-  override def children(): util.Enumeration[_] = _children.elements
+  override def children(): util.Enumeration[_ <: javax.swing.tree.TreeNode] = _children.elements
 
   override def isLeaf: Boolean = _children.isEmpty
 

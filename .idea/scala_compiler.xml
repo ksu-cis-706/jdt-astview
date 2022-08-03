@@ -3,7 +3,6 @@
   <component name="ScalaCompilerConfiguration">
     <parameters>
       <parameter value="–target:jvm-1.8" />
-      <parameter value="-opt:l:classpath" />
       <parameter value="-deprecation" />
       <parameter value="-Ydelambdafy:method" />
       <parameter value="-feature" />
